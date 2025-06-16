@@ -19,7 +19,15 @@ def fix_coco_file(path, contributor="Unknown", categories=None):
     dirname = os.path.dirname(path)
     old_path = os.path.join(dirname, filename.replace(".json", "_old.json"))
     fixed_path = path
+    
+    # Load the JSON first to check if 'info' exists
+    with open(path, 'r') as f:
+        data = json.load(f)
 
+    if 'info' in data:
+        print("Nothing to fix: 'info' field already exists.")
+        return
+        
     # Backup the original file
     shutil.move(path, old_path)
     print(f"🔁 Renamed {filename} → {os.path.basename(old_path)}")
