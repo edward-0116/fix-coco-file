@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import argparse
 
 def fix_coco_file(path, contributor="Unknown", categories=None):
     """
@@ -46,3 +47,23 @@ def fix_coco_file(path, contributor="Unknown", categories=None):
         json.dump(data, f, indent=2)
 
     print(f"✅ Fixed and saved: {filename}\n")
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Fix a COCO-style JSON annotation file.")
+    parser.add_argument("path", help="Path to the COCO JSON file.")
+    parser.add_argument("--contributor", default="Unknown", help="Name of the dataset contributor.")
+    parser.add_argument("--categories", type=str, default=None,
+                        help="Path to JSON file containing a list of COCO categories.")
+
+    args = parser.parse_args()
+
+    categories = None
+    if args.categories:
+        with open(args.categories, 'r') as f:
+            categories = json.load(f)
+
+    fix_coco_file(args.path, contributor=args.contributor, categories=categories)
+
+if __name__ == "__main__":
+    main()
